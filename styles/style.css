@@ -140,4 +140,12 @@ h3 {
   color: ivory;
   border-top: 3px dashed ivory;
   border-bottom: 3px dashed ivory;
+  list-style: none;
+}
+#melody li {
+  display: inline-block;
+  margin: 0 3px;
+}
+#melody li.selected {
+  color: firebrick;
 }

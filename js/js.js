@@ -8,9 +8,8 @@ $(function() { // upon DOM having loaded
   $("#makesound").click(function(e){
     e.preventDefault();
     var melody = lettersToNotes($("#input").val());
-    $("#melody").html(melody.join(" ")).show();
+    $("#melody").html("<li>"+melody.join("</li><li>")+"</li>").show();
     playArray(melody);
-    //allNotes();
   });
 
 });
@@ -19,7 +18,7 @@ function lettersToNotes(str) {
   str = str.toLowerCase().replace(/\W/g, ""); // remove everything not a letter
   // TODO: turn spaces into breaks?
 
-  var scale = 21; // where to start. this is C3
+  var scale = 28; // where to start. this is C3
   var numeric = allNotes(); // array mapping #s to notes. numeric[21] == "C3"
   return $.map(str, function(c){
     return numeric[scale + (c.charCodeAt()-97) % 8]; // 97 is ASCII of 'a', %8 to get number from 0-7
@@ -40,9 +39,14 @@ function playFreqs(freqs) {
       this.audiolet = new Audiolet();
 
       var frequencyPattern = new PSequence(freqs, 1);
-
+      var i = 1;
       this.audiolet.scheduler.play([frequencyPattern], 1,
         function(frequency) {
+          console.log("playing a note");
+          $("#melody li:nth-child("+(i-1)+")").attr("class", "");
+          $("#melody li:nth-child("+i+")").attr("class", "selected");
+          i++;
+          // if (i == $("#melody li").length) // last one shouldn't stay lit
           var synth = new Synth(this.audiolet, frequency);
           synth.connect(this.audiolet.output);
         }.bind(this)
